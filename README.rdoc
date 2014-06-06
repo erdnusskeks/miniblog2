@@ -1,0 +1,108 @@
+= Instructions
+
+1.)
+  - rails new miniblog
+  - cd followup
+  - rails s
+
+2.)
+  - posts#index
+    - route => root 'posts#index'
+    - controller
+      => controllers/posts_controller.rb
+      => def index; end
+    - view
+      => views/posts/index.html.erb
+         Hello world!
+
+3.)
+  - post model
+    => rails generate model Post title:string content:text
+    - migration
+    => rails console:
+      - p = Post.new
+      - p.title = "hello world"
+      - p.content = "ipsum lorem larum"
+      - p.save
+      ~> nochmal ohne save, dann p.persisted?
+          p = Post.create(:title => "lorem", :content => "ipsum")
+          Post.create(title: "ipsum", content: "lorem")
+          Methoden: Post.count, Post.all, Post.order(:created_at => :desc)
+
+          Methden, die nur auf Strings angewendet werden können:
+          p = Post.find(1)
+          p.title.reverse
+          p.title.length
+          p.title.upcase
+          p.title.size
+    - posts#index method anpassen
+    - views/posts/index.erb.html
+      <%= @posts %>
+       @posts.inspect, .to_a
+
+4.)
+  - posts#index view improvements:
+    - controller: def index ändern
+    - <%= render @posts %>
+    - views/posts/_post.html.erb (partial)
+      <hr>
+      <h2><%= post.title %></h2>
+      <p><%= post.content %></p>
+
+5.)
+  - posts#new (= create)
+    - $ rake routes
+    - routes => resources :posts, only: [:index, :new, :create]
+    - $ rake routes
+    - new action auf Index-Seite
+      => link: <%= link_to "new post", new_post_path %>
+    - new view
+      => hello new post (Formular anlegen)
+      <%= form_for @post do |f| %>
+      ~> HTML-Vgl.:
+        <label>Titel: </label>
+        <input type="text"><br />
+        <label>Inhalt: </label>
+        <textarea></textarea>
+        <button type="submit">Klick mich!</button>
+      => <%= link_to 'back', posts_path %>
+      => form => <%= render 'form' %>
+        - posts/_form.html.erb
+    - implement create action to save new post + redirect
+    - send to controller => def create; render text: params; end (Zwischenschritt)
+      => post_params Methode
+
+    - sortieren: Controller --> @posts = Post.order(created_at: :desc)
+    - Erstellusngdatum anzeigen: _post.html.erb --> <%= l post.created_at, format: :long %>
+
+
+---------------
+Optional:
+
+6.)
+  - add category field to posts
+  => rails g migration add_category_to_post category:string
+  (Alternative Schreibweise: AddCategoryToPost)
+  - show schema.rb
+  - migrate
+  - show schema.rb
+  - add :category to controller permit
+  - add :category to _form
+  - add :category to _post
+
+7.)
+  - change category field to select
+  => <%= f.select :category, Post::CATEGORIES %>
+  => ins Model:
+  CATEGORIES = [
+    ["Cooking", "Cooking"],
+    ["Programming", "Programming"],
+    ["Fun", "Fun"],
+    ["Sport", "Sport"],
+    ["Reading", "Reading"]
+  ]
+
+  8.)
+    - add comments:
+    => rails generate model Comment user:string content:text
+    - migration
