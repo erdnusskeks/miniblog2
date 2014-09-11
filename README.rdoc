@@ -2,7 +2,7 @@
 
 1.)
   - rails new miniblog
-  - cd followup
+  - cd miniblog
   - rails s
 
 2.)
@@ -73,7 +73,7 @@
       => post_params Methode
 
     - sortieren: Controller --> @posts = Post.order(created_at: :desc)
-    - Erstellusngdatum anzeigen: _post.html.erb --> <%= l post.created_at, format: :long %>
+    - Erstellungsdatum anzeigen: _post.html.erb --> <%= l post.created_at, format: :long %>
 
 
 ---------------
